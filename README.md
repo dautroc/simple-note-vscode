@@ -24,8 +24,6 @@ A Visual Studio Code extension for quickly jotting down notes and thoughts witho
 ## Usage
 
 1.  **Configure your notes directory**:
-    *   Open VS Code Settings (Ctrl+, or Cmd+,).
-    *   Search for "Simple Note".
     *   Set the `simpleNote.notesPath` to the absolute path where you want to store your notes (e.g., `/YOUR_NOTE_PATH`.
 2.  **(Optional) Configure your templates directory**:
     *   If you plan to use templates, set `simpleNote.templatesPath` to the absolute path of your templates folder.

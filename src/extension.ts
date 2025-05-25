@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { NoteExplorerProvider } from './noteExplorerProvider';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -20,6 +21,24 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposable);
+
+	// Register the TreeDataProvider for the Note Explorer
+	const noteExplorerProvider = new NoteExplorerProvider();
+	vscode.window.registerTreeDataProvider('simpleNoteExplorer', noteExplorerProvider);
+
+	// Register the command to open/focus the Note Explorer
+	const openNoteExplorerCommand = vscode.commands.registerCommand('simple-note-vscode.openNoteExplorer', () => {
+		vscode.commands.executeCommand('workbench.view.extension.simple-note-explorer-view-container');
+		// You might also want to ensure the specific view is focused if the container can have multiple views
+		// For now, focusing the container should be sufficient as it only has one view.
+	});
+	context.subscriptions.push(openNoteExplorerCommand);
+
+	// Add a command to refresh the note explorer
+	const refreshNoteExplorerCommand = vscode.commands.registerCommand('simple-note-vscode.refreshNoteExplorer', () => {
+		noteExplorerProvider.refresh();
+	});
+	context.subscriptions.push(refreshNoteExplorerCommand);
 }
 
 // This method is called when your extension is deactivated

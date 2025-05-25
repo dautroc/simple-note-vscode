@@ -3,8 +3,12 @@
   "displayName": "simple-note-vscode",
   "description": "Simple note for vscode",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dautroc/simple-note-vscode.git"
+  },
   "engines": {
-    "vscode": "^1.100.0"
+    "vscode": "^1.96.0"
   },
   "categories": [
     "Other"
@@ -16,8 +20,41 @@
       {
         "command": "simple-note-vscode.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "simple-note-vscode.openNoteExplorer",
+        "title": "Open Note Explorer"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "simple-note-explorer-view-container",
+          "title": "Simple Note",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "simple-note-explorer-view-container": [
+        {
+          "id": "simpleNoteExplorer",
+          "name": "Notes",
+          "type": "tree"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Simple Note Configuration",
+      "properties": {
+        "simpleNote.notesPath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to your notes directory."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -28,7 +65,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.100.0",
+    "@types/vscode": "^1.96.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@typescript-eslint/eslint-plugin": "^8.31.1",

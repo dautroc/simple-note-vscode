@@ -24,12 +24,6 @@ export class NoteItem extends vscode.TreeItem {
             this.command = undefined;
         }
     }
-
-    // You can add a custom icon for note items here if you want
-    // iconPath = {
-    //     light: path.join(__filename, '..', '..', 'resources', 'light', 'dependency.svg'),
-    //     dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg')
-    // };
 }
 
 export class NoteExplorerProvider implements vscode.TreeDataProvider<NoteItem> {

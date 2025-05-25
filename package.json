@@ -81,6 +81,11 @@
           "type": "string",
           "default": "",
           "description": "The absolute path to your notes directory."
+        },
+        "simpleNote.defaultExtension": {
+          "type": "string",
+          "default": "md",
+          "description": "The default file extension for new notes (e.g., md, txt, mn). Do not include the leading dot."
         }
       }
     },

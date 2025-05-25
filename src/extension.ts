@@ -5,20 +5,10 @@ import { NoteExplorerProvider, NoteItem } from './noteExplorerProvider';
 import * as fs from 'fs';
 import * as path from 'path';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "simple-note-vscode" is now active!');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
 	const disposable = vscode.commands.registerCommand('simple-note-vscode.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from simple-note-vscode!');
 	});
 
@@ -31,8 +21,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// Register the command to open/focus the Note Explorer
 	const openNoteExplorerCommand = vscode.commands.registerCommand('simple-note-vscode.openNoteExplorer', () => {
 		vscode.commands.executeCommand('workbench.view.extension.simple-note-explorer-view-container');
-		// You might also want to ensure the specific view is focused if the container can have multiple views
-		// For now, focusing the container should be sufficient as it only has one view.
 	});
 	context.subscriptions.push(openNoteExplorerCommand);
 
@@ -57,9 +45,27 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const parentPath = item && item.itemType === 'directory' ? item.filePath : notesRootPath;
 
-		const fileName = await vscode.window.showInputBox({ prompt: 'Enter the name for the new file' });
+		let fileName = await vscode.window.showInputBox({ prompt: 'Enter the name for the new file (extension will be added if not provided)' });
 		if (fileName) {
+			const config = vscode.workspace.getConfiguration('simpleNote');
+			const defaultExtension = config.get<string>('defaultExtension', 'md');
+
+			// Add default extension if not provided by the user
+			if (defaultExtension && !path.extname(fileName)) {
+				fileName = `${fileName}.${defaultExtension}`;
+			} else if (defaultExtension && path.extname(fileName) === '.'){
+				// Handle case where user types just a dot e.g. "mynote."
+				fileName = `${fileName}${defaultExtension}`;
+			}
+
 			const filePath = path.join(parentPath, fileName);
+
+			// Check if file already exists
+			if (fs.existsSync(filePath)) {
+				vscode.window.showErrorMessage(`File already exists: ${filePath}`);
+				return;
+			}
+
 			try {
 				fs.writeFileSync(filePath, ''); // Create an empty file
 				noteExplorerProvider.refresh();
@@ -141,5 +147,4 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(deleteItemCommand);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}

@@ -31,8 +31,8 @@
         "category": "Simple Note"
       },
       {
-        "command": "simple-note-vscode.newFile",
-        "title": "Simple Note: New File",
+        "command": "simple-note-vscode.newNote",
+        "title": "Simple Note: New Note",
         "category": "Simple Note",
         "icon": "$(new-file)"
       },
@@ -55,8 +55,8 @@
         "icon": "$(trash)"
       },
       {
-        "command": "simple-note-vscode.newFileFromTemplate",
-        "title": "Simple Note: New File From Template",
+        "command": "simple-note-vscode.newNoteFromTemplate",
+        "title": "Simple Note: New Note From Template",
         "category": "Simple Note",
         "icon": "$(file-symlink-file)"
       }
@@ -108,7 +108,7 @@
           "group": "navigation@1"
         },
         {
-          "command": "simple-note-vscode.newFile",
+          "command": "simple-note-vscode.newNote",
           "when": "view == simpleNoteExplorer",
           "group": "navigation@2"
         },
@@ -118,14 +118,14 @@
           "group": "navigation@3"
         },
         {
-          "command": "simple-note-vscode.newFileFromTemplate",
+          "command": "simple-note-vscode.newNoteFromTemplate",
           "when": "view == simpleNoteExplorer",
           "group": "navigation@4"
         }
       ],
       "view/item/context": [
         {
-          "command": "simple-note-vscode.newFile",
+          "command": "simple-note-vscode.newNote",
           "when": "view == simpleNoteExplorer && viewItem == directory",
           "group": "1_new@1"
         },
@@ -135,7 +135,7 @@
           "group": "1_new@2"
         },
         {
-          "command": "simple-note-vscode.newFileFromTemplate",
+          "command": "simple-note-vscode.newNoteFromTemplate",
           "when": "view == simpleNoteExplorer && viewItem == directory",
           "group": "1_new@3"
         },

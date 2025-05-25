@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	// Command: New File
-	const newFileCommand = vscode.commands.registerCommand('simple-note-vscode.newFile', async (item?: NoteItem) => {
+	const newNoteCommand = vscode.commands.registerCommand('simple-note-vscode.newNote', async (item?: NoteItem) => {
 		const notesRootPath = getNotesPath();
 		if (!notesRootPath) {
 			vscode.window.showErrorMessage('Simple Note: Notes path not set.');
@@ -45,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const parentPath = item && item.itemType === 'directory' ? item.filePath : notesRootPath;
 
-		let fileName = await vscode.window.showInputBox({ prompt: 'Enter the name for the new file (extension will be added if not provided)' });
+		let fileName = await vscode.window.showInputBox({ prompt: 'Enter the name for the new note (extension will be added if not provided)' });
 		if (fileName) {
 			const config = vscode.workspace.getConfiguration('simpleNote');
 			const defaultExtension = config.get<string>('defaultExtension', 'md');
@@ -62,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			// Check if file already exists
 			if (fs.existsSync(filePath)) {
-				vscode.window.showErrorMessage(`File already exists: ${filePath}`);
+				vscode.window.showErrorMessage(`Note already exists: ${filePath}`);
 				return;
 			}
 
@@ -72,11 +72,11 @@ export function activate(context: vscode.ExtensionContext) {
 				const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(filePath));
 				await vscode.window.showTextDocument(doc);
 			} catch (error: any) {
-				vscode.window.showErrorMessage(`Failed to create file: ${error.message}`);
+				vscode.window.showErrorMessage(`Failed to create note: ${error.message}`);
 			}
 		}
 	});
-	context.subscriptions.push(newFileCommand);
+	context.subscriptions.push(newNoteCommand);
 
 	// Command: New Directory
 	const newDirectoryCommand = vscode.commands.registerCommand('simple-note-vscode.newDirectory', async (item?: NoteItem) => {
@@ -147,7 +147,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(deleteItemCommand);
 
 	// Command: New File From Template
-	const newFileFromTemplateCommand = vscode.commands.registerCommand('simple-note-vscode.newFileFromTemplate', async (item?: NoteItem) => {
+	const newNoteFromTemplateCommand = vscode.commands.registerCommand('simple-note-vscode.newNoteFromTemplate', async (item?: NoteItem) => {
 		const config = vscode.workspace.getConfiguration('simpleNote');
 		const notesRootPath = config.get<string>('notesPath');
 		const templatesPath = config.get<string>('templatesPath');
@@ -192,7 +192,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			const newNotePath = path.join(parentPath, newNoteName);
 			if (fs.existsSync(newNotePath)) {
-				vscode.window.showErrorMessage(`File already exists: ${newNotePath}`);
+				vscode.window.showErrorMessage(`Note already exists: ${newNotePath}`);
 				return;
 			}
 
@@ -208,7 +208,7 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showErrorMessage(`Failed to create note from template: ${error.message}`);
 		}
 	});
-	context.subscriptions.push(newFileFromTemplateCommand);
+	context.subscriptions.push(newNoteFromTemplateCommand);
 }
 
 export function deactivate() {}

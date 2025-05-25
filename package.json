@@ -65,6 +65,12 @@
         "title": "Simple Note: Create New Template",
         "category": "Simple Note",
         "icon": "$(new-file)"
+      },
+      {
+        "command": "simple-note-vscode.findNote",
+        "title": "Simple Note: Find Note by Name",
+        "category": "Simple Note",
+        "icon": "$(search)"
       }
     ],
     "viewsContainers": {
@@ -132,6 +138,11 @@
           "command": "simple-note-vscode.createTemplate",
           "when": "view == simpleNoteExplorer",
           "group": "navigation@5"
+        },
+        {
+          "command": "simple-note-vscode.findNote",
+          "when": "view == simpleNoteExplorer",
+          "group": "navigation@6"
         }
       ],
       "view/item/context": [

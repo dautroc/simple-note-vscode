@@ -18,10 +18,9 @@ import { renameItemHandler } from './commands/renameItemHandler';
 import { deleteItemHandler } from './commands/deleteItemHandler';
 import { newNoteFromTemplateHandler } from './commands/newNoteFromTemplateHandler';
 import { createTemplateHandler } from './commands/createTemplateHandler';
+import { findNoteHandler } from './commands/findNoteHandler';
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log('Congratulations, your extension "simple-note-vscode" is now active!');
-
 	// Register the TreeDataProvider for the Note Explorer
 	const noteExplorerProvider = new NoteExplorerProvider();
 	vscode.window.registerTreeDataProvider('simpleNoteExplorer', noteExplorerProvider);
@@ -52,7 +51,8 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('simple-note-vscode.newNoteFromTemplate', 
 			(item?: NoteItem) => newNoteFromTemplateHandler(item, noteExplorerProvider)
 		),
-		vscode.commands.registerCommand('simple-note-vscode.createTemplate', createTemplateHandler)
+		vscode.commands.registerCommand('simple-note-vscode.createTemplate', createTemplateHandler),
+		vscode.commands.registerCommand('simple-note-vscode.findNote', findNoteHandler)
 	);
 }
 

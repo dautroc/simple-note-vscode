@@ -51,7 +51,19 @@ export async function newNoteFromTemplateHandler(item?: NoteItem, noteExplorerPr
 
         const newNotePath = path.join(parentPath, newNoteName);
         if (fs.existsSync(newNotePath)) {
-            vscode.window.showErrorMessage(`Note already exists: ${newNotePath}`);
+            const action = await vscode.window.showWarningMessage(
+                `Note already exists: ${newNoteName}`,
+                { modal: false }, 
+                'Open Existing Note'
+            );
+            if (action === 'Open Existing Note') {
+                try {
+                    const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(newNotePath));
+                    await vscode.window.showTextDocument(doc);
+                } catch (error: any) {
+                    vscode.window.showErrorMessage(`Failed to open existing note: ${error.message}`);
+                }
+            }
             return;
         }
 

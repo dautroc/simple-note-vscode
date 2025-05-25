@@ -1,32 +1,6 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
 import { getNotesPath } from '../utils/configUtils';
-
-interface FoundNote {
-    label: string; // Filename or relative path
-    filePath: string; // Absolute path
-    description?: string; // Could be the sub-folder path
-}
-
-// Recursive function to find all files in a directory
-async function findAllFiles(dirPath: string, notesRootPath: string, fileList: FoundNote[] = []): Promise<FoundNote[]> {
-    const entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
-    for (const entry of entries) {
-        const fullPath = path.join(dirPath, entry.name);
-        if (entry.isDirectory()) {
-            await findAllFiles(fullPath, notesRootPath, fileList);
-        } else if (entry.isFile()) {
-            const relativePath = path.relative(notesRootPath, fullPath);
-            fileList.push({
-                label: entry.name, // Display filename primarily
-                filePath: fullPath,
-                description: path.dirname(relativePath) !== '.' ? path.dirname(relativePath) : '' // Show subfolder if not root
-            });
-        }
-    }
-    return fileList;
-}
+import * as path from 'path'; // For path.sep
 
 export async function findNoteHandler(): Promise<void> {
     const notesRootPath = getNotesPath();
@@ -37,24 +11,21 @@ export async function findNoteHandler(): Promise<void> {
     }
 
     try {
-        const allNotes = await findAllFiles(notesRootPath, notesRootPath);
-
-        if (allNotes.length === 0) {
-            vscode.window.showInformationMessage('No notes found in your notes directory.');
-            return;
+        // Ensure the path ends with a separator to hint to Quick Open it's a directory filter.
+        // VS Code's Quick Open is generally good at handling paths, and an absolute path should work.
+        let quickOpenQuery = notesRootPath;
+        if (!quickOpenQuery.endsWith(path.sep)) {
+            quickOpenQuery += path.sep;
         }
 
-        const selectedNote = await vscode.window.showQuickPick<FoundNote>(allNotes, {
-            placeHolder: 'Type to search for a note by name or path...',
-            matchOnDescription: true, // Allows searching the subfolder path
-            // Consider adding matchOnDetail if you add more details to FoundNote
-        });
+        // Execute VS Code's built-in Quick Open command (Go to File)
+        // Pre-filling with the notes path (e.g., "/path/to/your/notes/") 
+        // will filter the Quick Open list to that directory.
+        await vscode.commands.executeCommand('workbench.action.quickOpen', quickOpenQuery);
+        // The user then types the rest of the filename and selects it.
+        // VS Code handles opening the selected file.
 
-        if (selectedNote) {
-            const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(selectedNote.filePath));
-            await vscode.window.showTextDocument(doc);
-        }
     } catch (error: any) {
-        vscode.window.showErrorMessage(`Error finding notes: ${error.message}`);
+        vscode.window.showErrorMessage(`Error opening Quick Open for notes: ${error.message}`);
     }
 } 

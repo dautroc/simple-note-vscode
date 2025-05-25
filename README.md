@@ -21,19 +21,6 @@ A Visual Studio Code extension for quickly jotting down notes and thoughts witho
     *   Most actions are available via context menus within the Note Explorer.
     *   Dedicated icons for common actions in the Note Explorer's title bar.
 
-## Requirements
-
-*   Visual Studio Code version 1.96.0 or higher.
-
-## Installation
-
-1.  Open Visual Studio Code.
-2.  Go to the Extensions view (Ctrl+Shift+X or Cmd+Shift+X).
-3.  Search for "Simple Note VSCode".
-4.  Click "Install".
-
-Alternatively, you can download the `.vsix` file from the [releases page](https://github.com/dautroc/simple-note-vscode/releases) and install it manually via `Extensions: Install from VSIX...` command in VS Code.
-
 ## Usage
 
 1.  **Configure your notes directory**:

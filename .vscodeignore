@@ -1,0 +1,28 @@
+.vscode/**
+!quality.js
+.vscode-test/**
+.vscode-test-web/**
+
+# dependencies
+node_modules/**
+
+# output
+out/**
+dist/**
+*.vsix
+
+# tests
+src/**/*.test.ts
+src/**/*.test.js
+
+# build files
+**/*.map
+**/tsconfig.json
+**/.eslintrc.json
+**/.eslintignore
+
+# other
+.gitignore
+.yarnrc
+vsc-extension-quickstart.md
+**/eslint.config.mjs

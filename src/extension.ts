@@ -4,6 +4,27 @@ import * as vscode from 'vscode';
 import { NoteExplorerProvider, NoteItem } from './noteExplorerProvider';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as crypto from 'crypto';
+
+// Helper function to convert a string to title case (e.g., "first_meeting" -> "First Meeting")
+function toTitleCase(str: string): string {
+	return str.replace(/[_-]/g, ' ') // Replace underscores and hyphens with spaces
+		.replace(/\w\S*/g, (txt) => { // Capitalize the first letter of each word
+			return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+		});
+}
+
+// Helper function to get the ISO week number
+function getISOWeek(date: Date): string {
+	const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+	// Thursday in current week decides the year.
+	d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+	// January 4 is always in week 1.
+	const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+	// Calculate full weeks to nearest Thursday
+	const weekNumber = Math.ceil((((d.valueOf() - yearStart.valueOf()) / 86400000) + 1) / 7);
+	return weekNumber.toString().padStart(2, '0');
+}
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "simple-note-vscode" is now active!');
@@ -197,9 +218,45 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 
 			const templateFilePath = path.join(templatesPath, selectedTemplateName);
-			const templateContent = fs.readFileSync(templateFilePath);
+			let templateContentString = fs.readFileSync(templateFilePath, 'utf8');
 
-			fs.writeFileSync(newNotePath, templateContent);
+			// --- Process template variables --- 
+			const currentDate = new Date();
+			const year = currentDate.getFullYear();
+			const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+			const day = currentDate.getDate().toString().padStart(2, '0');
+			const hours = currentDate.getHours().toString().padStart(2, '0');
+			const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+			const seconds = currentDate.getSeconds().toString().padStart(2, '0');
+
+			const formattedDate = `${year}-${month}-${day}`;
+			const formattedTime = `${hours}:${minutes}:${seconds}`;
+			const formattedDateTime = `${formattedDate} ${formattedTime}`;
+			const currentWeek = getISOWeek(currentDate);
+
+			templateContentString = templateContentString.replace(/\{date\}/g, formattedDate);
+			templateContentString = templateContentString.replace(/\{time\}/g, formattedTime);
+			templateContentString = templateContentString.replace(/\{datetime\}/g, formattedDateTime);
+			templateContentString = templateContentString.replace(/\{year\}/g, year.toString());
+			templateContentString = templateContentString.replace(/\{month\}/g, month);
+			templateContentString = templateContentString.replace(/\{day\}/g, day);
+			templateContentString = templateContentString.replace(/\{week\}/g, currentWeek);
+
+			// Note Name / Title Processing
+			if (newNoteName) {
+				const noteFileNameBase = path.basename(newNoteName, path.extname(newNoteName));
+				// For {title}, convert to title case
+				const formattedTitle = toTitleCase(noteFileNameBase);
+				templateContentString = templateContentString.replace(/\{title\}/g, formattedTitle);
+				// For {note_name}, use the base filename directly
+				templateContentString = templateContentString.replace(/\{note_name\}/g, noteFileNameBase);
+			}
+
+			// UUID Processing
+			const newUuid = crypto.randomUUID();
+			templateContentString = templateContentString.replace(/\{uuid\}/g, newUuid);
+
+			fs.writeFileSync(newNotePath, templateContentString);
 			noteExplorerProvider.refresh();
 			const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(newNotePath));
 			await vscode.window.showTextDocument(doc);

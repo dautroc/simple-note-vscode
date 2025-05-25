@@ -145,6 +145,70 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 	context.subscriptions.push(deleteItemCommand);
+
+	// Command: New File From Template
+	const newFileFromTemplateCommand = vscode.commands.registerCommand('simple-note-vscode.newFileFromTemplate', async (item?: NoteItem) => {
+		const config = vscode.workspace.getConfiguration('simpleNote');
+		const notesRootPath = config.get<string>('notesPath');
+		const templatesPath = config.get<string>('templatesPath');
+
+		if (!notesRootPath) {
+			vscode.window.showErrorMessage('Simple Note: Notes path not set. Please configure "simpleNote.notesPath".');
+			return;
+		}
+		if (!templatesPath) {
+			vscode.window.showErrorMessage('Simple Note: Templates path not set. Please configure "simpleNote.templatesPath".');
+			return;
+		}
+
+		try {
+			const templateFiles = fs.readdirSync(templatesPath).filter(file => fs.statSync(path.join(templatesPath, file)).isFile());
+			if (templateFiles.length === 0) {
+				vscode.window.showInformationMessage('No templates found in the configured templates directory.');
+				return;
+			}
+
+			const selectedTemplateName = await vscode.window.showQuickPick(templateFiles, {
+				placeHolder: 'Select a template to create a new note from'
+			});
+
+			if (!selectedTemplateName) {
+				return; // User cancelled
+			}
+
+			const parentPath = item && item.itemType === 'directory' ? item.filePath : notesRootPath;
+			let newNoteName = await vscode.window.showInputBox({ prompt: 'Enter the name for the new note (extension will be added if not provided)' });
+
+			if (!newNoteName) {
+				return; // User cancelled
+			}
+
+			const defaultExtension = config.get<string>('defaultExtension', 'md');
+			if (defaultExtension && !path.extname(newNoteName)) {
+				newNoteName = `${newNoteName}.${defaultExtension}`;
+			} else if (defaultExtension && path.extname(newNoteName) === '.') {
+				newNoteName = `${newNoteName}${defaultExtension}`;
+			}
+
+			const newNotePath = path.join(parentPath, newNoteName);
+			if (fs.existsSync(newNotePath)) {
+				vscode.window.showErrorMessage(`File already exists: ${newNotePath}`);
+				return;
+			}
+
+			const templateFilePath = path.join(templatesPath, selectedTemplateName);
+			const templateContent = fs.readFileSync(templateFilePath);
+
+			fs.writeFileSync(newNotePath, templateContent);
+			noteExplorerProvider.refresh();
+			const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(newNotePath));
+			await vscode.window.showTextDocument(doc);
+
+		} catch (error: any) {
+			vscode.window.showErrorMessage(`Failed to create note from template: ${error.message}`);
+		}
+	});
+	context.subscriptions.push(newFileFromTemplateCommand);
 }
 
 export function deactivate() {}

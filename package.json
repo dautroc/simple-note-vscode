@@ -53,6 +53,12 @@
         "title": "Simple Note: Delete",
         "category": "Simple Note",
         "icon": "$(trash)"
+      },
+      {
+        "command": "simple-note-vscode.newFileFromTemplate",
+        "title": "Simple Note: New File From Template",
+        "category": "Simple Note",
+        "icon": "$(file-symlink-file)"
       }
     ],
     "viewsContainers": {
@@ -86,6 +92,11 @@
           "type": "string",
           "default": "md",
           "description": "The default file extension for new notes (e.g., md, txt, mn). Do not include the leading dot."
+        },
+        "simpleNote.templatesPath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to your notes templates directory. Leave empty to disable template functionality."
         }
       }
     },
@@ -105,6 +116,11 @@
           "command": "simple-note-vscode.newDirectory",
           "when": "view == simpleNoteExplorer",
           "group": "navigation@3"
+        },
+        {
+          "command": "simple-note-vscode.newFileFromTemplate",
+          "when": "view == simpleNoteExplorer",
+          "group": "navigation@4"
         }
       ],
       "view/item/context": [
@@ -117,6 +133,11 @@
           "command": "simple-note-vscode.newDirectory",
           "when": "view == simpleNoteExplorer && viewItem == directory",
           "group": "1_new@2"
+        },
+        {
+          "command": "simple-note-vscode.newFileFromTemplate",
+          "when": "view == simpleNoteExplorer && viewItem == directory",
+          "group": "1_new@3"
         },
         {
           "command": "simple-note-vscode.renameItem",

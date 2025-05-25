@@ -7,16 +7,22 @@ export class NoteItem extends vscode.TreeItem {
         public readonly label: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly filePath: string,
+        public readonly itemType: 'file' | 'directory',
         public readonly command?: vscode.Command
     ) {
         super(label, collapsibleState);
         this.tooltip = `${this.filePath}`;
-        this.description = false; // No description for now
+        this.description = false;
         this.command = command || {
             command: 'vscode.open',
             title: 'Open Note',
             arguments: [vscode.Uri.file(this.filePath)]
         };
+        this.contextValue = itemType;
+
+        if (itemType === 'directory') {
+            this.command = undefined;
+        }
     }
 
     // You can add a custom icon for note items here if you want
@@ -56,39 +62,44 @@ export class NoteExplorerProvider implements vscode.TreeDataProvider<NoteItem> {
     }
 
     getChildren(element?: NoteItem): Thenable<NoteItem[]> {
-        if (!this.notesPath) {
-            vscode.window.showInformationMessage('No notes path configured. Please set "Simple Note: Notes Path" in your settings.');
+        const currentPath = element ? element.filePath : this.notesPath;
+
+        if (!currentPath) {
+            if (!this.notesPath) {
+                 vscode.window.showInformationMessage('No notes path configured. Please set "Simple Note: Notes Path" in your settings.');
+            }
             return Promise.resolve([]);
         }
 
-        if (element) {
-            // For now, we assume a flat list of notes, so children of a note item would be empty.
-            // This could be extended later to support sub-directories.
-            return Promise.resolve([]);
-        } else {
-            // This is the root level, list files in the notesPath
-            return new Promise((resolve, reject) => {
-                if (!this.notesPath) { // Double check, though loadConfiguration should handle it
-                    return resolve([]);
+        return new Promise((resolve, reject) => {
+            fs.readdir(currentPath, { withFileTypes: true }, (err, entries) => {
+                if (err) {
+                    vscode.window.showErrorMessage(`Error reading directory ${currentPath}: ${err.message}`);
+                    return reject(err);
                 }
-                fs.readdir(this.notesPath, (err, files) => {
-                    if (err) {
-                        vscode.window.showErrorMessage(`Error reading notes directory: ${err.message}`);
-                        return reject(err);
+
+                const items = entries.map(entry => {
+                    const entryPath = path.join(currentPath, entry.name);
+                    if (entry.isFile()) {
+                        return new NoteItem(entry.name, vscode.TreeItemCollapsibleState.None, entryPath, 'file');
+                    } else if (entry.isDirectory()) {
+                        return new NoteItem(entry.name, vscode.TreeItemCollapsibleState.Collapsed, entryPath, 'directory');
                     }
-                    const notes = files.map(file => {
-                        const filePath = path.join(this.notesPath!, file);
-                        // For now, we'll assume all files are notes.
-                        // You might want to filter by extension (e.g., .md, .txt)
-                        // Also, filter out directories if you only want files
-                        if (fs.statSync(filePath).isFile()) {
-                           return new NoteItem(file, vscode.TreeItemCollapsibleState.None, filePath);
-                        }
-                        return null; // Or handle directories differently
-                    }).filter(note => note !== null) as NoteItem[];
-                    resolve(notes);
+                    return null;
+                }).filter(item => item !== null) as NoteItem[];
+                
+                items.sort((a, b) => {
+                    if (a.itemType === 'directory' && b.itemType === 'file') {
+                        return -1;
+                    }
+                    if (a.itemType === 'file' && b.itemType === 'directory') {
+                        return 1;
+                    }
+                    return a.label.localeCompare(b.label);
                 });
+
+                resolve(items);
             });
-        }
+        });
     }
 } 

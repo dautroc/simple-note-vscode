@@ -24,6 +24,35 @@
       {
         "command": "simple-note-vscode.openNoteExplorer",
         "title": "Open Note Explorer"
+      },
+      {
+        "command": "simple-note-vscode.refreshNoteExplorer",
+        "title": "Simple Note: Refresh Note Explorer",
+        "category": "Simple Note"
+      },
+      {
+        "command": "simple-note-vscode.newFile",
+        "title": "Simple Note: New File",
+        "category": "Simple Note",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "simple-note-vscode.newDirectory",
+        "title": "Simple Note: New Directory",
+        "category": "Simple Note",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "simple-note-vscode.renameItem",
+        "title": "Simple Note: Rename",
+        "category": "Simple Note",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "simple-note-vscode.deleteItem",
+        "title": "Simple Note: Delete",
+        "category": "Simple Note",
+        "icon": "$(trash)"
       }
     ],
     "viewsContainers": {
@@ -54,6 +83,47 @@
           "description": "The absolute path to your notes directory."
         }
       }
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "simple-note-vscode.refreshNoteExplorer",
+          "when": "view == simpleNoteExplorer",
+          "group": "navigation@1"
+        },
+        {
+          "command": "simple-note-vscode.newFile",
+          "when": "view == simpleNoteExplorer",
+          "group": "navigation@2"
+        },
+        {
+          "command": "simple-note-vscode.newDirectory",
+          "when": "view == simpleNoteExplorer",
+          "group": "navigation@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "simple-note-vscode.newFile",
+          "when": "view == simpleNoteExplorer && viewItem == directory",
+          "group": "1_new@1"
+        },
+        {
+          "command": "simple-note-vscode.newDirectory",
+          "when": "view == simpleNoteExplorer && viewItem == directory",
+          "group": "1_new@2"
+        },
+        {
+          "command": "simple-note-vscode.renameItem",
+          "when": "view == simpleNoteExplorer",
+          "group": "2_change@1"
+        },
+        {
+          "command": "simple-note-vscode.deleteItem",
+          "when": "view == simpleNoteExplorer",
+          "group": "2_change@2"
+        }
+      ]
     }
   },
   "scripts": {

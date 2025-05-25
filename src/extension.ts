@@ -209,6 +209,62 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 	context.subscriptions.push(newNoteFromTemplateCommand);
+
+	// Command: Create New Template
+	const createTemplateCommand = vscode.commands.registerCommand('simple-note-vscode.createTemplate', async () => {
+		const config = vscode.workspace.getConfiguration('simpleNote');
+		const templatesPath = config.get<string>('templatesPath');
+
+		if (!templatesPath) {
+			vscode.window.showErrorMessage('Simple Note: Templates path not set. Please configure "simpleNote.templatesPath" to create templates.');
+			return;
+		}
+
+		// Ensure templatesPath exists
+		try {
+			if (!fs.existsSync(templatesPath)) {
+				fs.mkdirSync(templatesPath, { recursive: true });
+				vscode.window.showInformationMessage(`Templates directory created at: ${templatesPath}`);
+			}
+		} catch (error: any) {
+			vscode.window.showErrorMessage(`Failed to create templates directory: ${error.message}`);
+			return;
+		}
+
+		let templateName = await vscode.window.showInputBox({
+			prompt: 'Enter the name for the new template (e.g., meeting_minutes.md or weekly_review.txt)',
+			placeHolder: 'template_name.md'
+		});
+
+		if (!templateName) {
+			return; // User cancelled
+		}
+
+		// Apply default extension if not provided, similar to notes
+		const defaultExtension = config.get<string>('defaultExtension', 'md'); 
+		if (!path.extname(templateName) && defaultExtension) {
+			templateName = `${templateName}.${defaultExtension}`;
+		} else if (path.extname(templateName) === '.' && defaultExtension) {
+			templateName = `${templateName}${defaultExtension}`;
+		}
+
+		const templateFilePath = path.join(templatesPath, templateName);
+
+		if (fs.existsSync(templateFilePath)) {
+			vscode.window.showErrorMessage(`Template already exists: ${templateFilePath}`);
+			return;
+		}
+
+		try {
+			fs.writeFileSync(templateFilePath, ''); // Create an empty template file
+			const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(templateFilePath));
+			await vscode.window.showTextDocument(doc);
+			vscode.window.showInformationMessage(`Template created and opened: ${templateName}`);
+		} catch (error: any) {
+			vscode.window.showErrorMessage(`Failed to create template: ${error.message}`);
+		}
+	});
+	context.subscriptions.push(createTemplateCommand);
 }
 
 export function deactivate() {}

@@ -59,6 +59,12 @@
         "title": "Simple Note: New Note From Template",
         "category": "Simple Note",
         "icon": "$(file-symlink-file)"
+      },
+      {
+        "command": "simple-note-vscode.createTemplate",
+        "title": "Simple Note: Create New Template",
+        "category": "Simple Note",
+        "icon": "$(new-file)"
       }
     ],
     "viewsContainers": {
@@ -121,6 +127,11 @@
           "command": "simple-note-vscode.newNoteFromTemplate",
           "when": "view == simpleNoteExplorer",
           "group": "navigation@4"
+        },
+        {
+          "command": "simple-note-vscode.createTemplate",
+          "when": "view == simpleNoteExplorer",
+          "group": "navigation@5"
         }
       ],
       "view/item/context": [

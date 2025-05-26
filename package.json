@@ -2,6 +2,7 @@
   "name": "simple-note-vscode",
   "displayName": "simple-note-vscode",
   "description": "Simple note for vscode",
+  "publisher": "dautroc",
   "version": "0.0.1",
   "repository": {
     "type": "git",

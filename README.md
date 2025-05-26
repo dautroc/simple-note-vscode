@@ -12,6 +12,7 @@ A Visual Studio Code extension for quickly jotting down notes and thoughts witho
     *   Delete notes and directories.
 *   **Template-Based Note Creation**:
     *   Quickly create new notes from predefined templates.
+    *   **Optional Default Template**: Configure a default template to be used automatically when creating a new note without explicitly selecting a template.
     *   Easily create new templates from existing notes or new content.
 *   **Powerful Search**:
     *   Find notes by their file names.
@@ -58,6 +59,9 @@ This extension contributes the following settings (configurable in User or Works
     *   Default: `"md"`
 *   `simpleNote.templatesPath` (string):
     *   Description: The absolute path to your notes templates directory. Leave empty to disable template functionality or if you don't use templates.
+    *   Default: `""`
+*   `simpleNote.defaultTemplatePath` (string):
+    *   Description: The absolute path to your default note template. If set, this template will be used when creating a new note (using the "Simple Note: New Note" command) without explicitly selecting a template. Placeholders like `{title}`, `{date}`, `{time}`, `{uuid}`, etc., will be replaced. Leave empty to create a blank new note.
     *   Default: `""`
 
 ## Known Issues

@@ -137,6 +137,11 @@
           "type": "string",
           "default": "",
           "description": "The absolute path to your notes templates directory. Leave empty to disable template functionality."
+        },
+        "simpleNote.defaultTemplatePath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to your default note template. If set, this template will be used when creating a new note without explicitly selecting a template. Leave empty to create a blank new note."
         }
       }
     },

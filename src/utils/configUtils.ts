@@ -10,4 +10,8 @@ export function getTemplatesPath(): string | undefined {
 
 export function getDefaultExtension(): string {
     return vscode.workspace.getConfiguration('simpleNote').get<string>('defaultExtension', 'md');
+}
+
+export function getDefaultTemplatePath(): string | undefined {
+    return vscode.workspace.getConfiguration('simpleNote').get<string>('defaultTemplatePath');
 } 

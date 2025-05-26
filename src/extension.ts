@@ -58,7 +58,10 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('simple-note-vscode.searchNotesContent', searchNotesContentHandler),
 		vscode.commands.registerCommand('simple-note-vscode.newJournalNote', 
 			() => newJournalNoteHandler(noteExplorerProvider)
-		)
+		),
+		vscode.commands.registerCommand('simple-note-vscode.focusNoteExplorer', () => {
+			vscode.commands.executeCommand('workbench.view.extension.simple-note-explorer-view-container');
+		})
 	);
 }
 

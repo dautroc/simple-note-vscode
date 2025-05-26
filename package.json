@@ -3,7 +3,7 @@
   "displayName": "Simple Note",
   "description": "Simple note for vscode",
   "publisher": "dautroc",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "icon": "resources/logo.png",
   "repository": {
     "type": "git",
@@ -39,10 +39,6 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "simple-note-vscode.helloWorld",
-        "title": "Hello World"
-      },
       {
         "command": "simple-note-vscode.openNoteExplorer",
         "title": "Open Note Explorer"
@@ -105,6 +101,11 @@
         "title": "Simple Note: New Journal Note (Today)",
         "category": "Simple Note",
         "icon": "$(calendar)"
+      },
+      {
+        "command": "simple-note-vscode.focusNoteExplorer",
+        "title": "Simple Note: Focus Note Explorer",
+        "category": "Simple Note"
       }
     ],
     "viewsContainers": {

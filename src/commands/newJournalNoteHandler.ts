@@ -1,47 +1,14 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as crypto from 'crypto';
+// import * as crypto from 'crypto'; // No longer needed here
 import { NoteExplorerProvider } from '../noteExplorerProvider';
 import { getNotesPath, getDefaultExtension, getDefaultTemplatePath, getJournalTemplatePath } from '../utils/configUtils';
-import { toTitleCase } from '../utils/stringUtils';
-import { getISOWeek } from '../utils/dateUtils';
+// import { toTitleCase } from '../utils/stringUtils'; // No longer needed here
+// import { getISOWeek } from '../utils/dateUtils'; // No longer needed here
+import { processPlaceholders } from '../utils/templateUtils'; // Import from new utility
 
-// Re-using placeholder processing from newNoteHandler (could be refactored into a shared utility)
-function processPlaceholders(content: string, noteName: string): string {
-    let processedContent = content;
-    const currentDate = new Date(); // Placeholders will be based on the moment of creation
-    const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const day = currentDate.getDate().toString().padStart(2, '0');
-    const hours = currentDate.getHours().toString().padStart(2, '0');
-    const minutes = currentDate.getMinutes().toString().padStart(2, '0');
-    const seconds = currentDate.getSeconds().toString().padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-    const formattedTime = `${hours}:${minutes}:${seconds}`;
-    const formattedDateTime = `${formattedDate} ${formattedTime}`;
-    const currentWeek = getISOWeek(currentDate);
-
-    processedContent = processedContent.replace(/\{date\}/g, formattedDate);
-    processedContent = processedContent.replace(/\{time\}/g, formattedTime);
-    processedContent = processedContent.replace(/\{datetime\}/g, formattedDateTime);
-    processedContent = processedContent.replace(/\{year\}/g, year.toString());
-    processedContent = processedContent.replace(/\{month\}/g, month);
-    processedContent = processedContent.replace(/\{day\}/g, day);
-    processedContent = processedContent.replace(/\{week\}/g, currentWeek);
-
-    if (noteName) {
-        const noteFileNameBase = path.basename(noteName, path.extname(noteName));
-        const formattedTitle = toTitleCase(noteFileNameBase);
-        processedContent = processedContent.replace(/\{title\}/g, formattedTitle);
-        processedContent = processedContent.replace(/\{note_name\}/g, noteFileNameBase);
-    }
-
-    const newUuid = crypto.randomUUID();
-    processedContent = processedContent.replace(/\{uuid\}/g, newUuid);
-
-    return processedContent;
-}
+// Re-using placeholder processing from newNoteHandler (could be refactored into a shared utility) -- REMOVED
 
 export async function newJournalNoteHandler(noteExplorerProvider?: NoteExplorerProvider): Promise<void> {
     const notesRootPath = getNotesPath();

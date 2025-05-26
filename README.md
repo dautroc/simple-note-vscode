@@ -10,9 +10,12 @@ A Visual Studio Code extension for quickly jotting down notes and thoughts witho
     *   Create new subdirectories to organize your notes.
     *   Rename notes and directories.
     *   Delete notes and directories.
+*   **Journaling**: 
+    *   Quickly create or open today's journal note (YYYY_MM_DD format) in a dedicated `journal` sub-folder using the "Simple Note: New Journal Note (Today)" command or the calendar icon.
 *   **Template-Based Note Creation**:
     *   Quickly create new notes from predefined templates.
-    *   **Optional Default Template**: Configure a default template to be used automatically when creating a new note without explicitly selecting a template.
+    *   **Optional Default Template**: Configure a default template to be used automatically when creating a new note via "Simple Note: New Note".
+    *   **Optional Journal Template**: Configure a specific template for journal notes. Falls back to the default template or a blank note if not set.
     *   Easily create new templates from existing notes or new content.
 *   **Powerful Search**:
     *   Find notes by their file names.
@@ -62,6 +65,9 @@ This extension contributes the following settings (configurable in User or Works
     *   Default: `""`
 *   `simpleNote.defaultTemplatePath` (string):
     *   Description: The absolute path to your default note template. If set, this template will be used when creating a new note (using the "Simple Note: New Note" command) without explicitly selecting a template. Placeholders like `{title}`, `{date}`, `{time}`, `{uuid}`, etc., will be replaced. Leave empty to create a blank new note.
+    *   Default: `""`
+*   `simpleNote.journalTemplatePath` (string):
+    *   Description: The absolute path to your dedicated journal note template. If set, this template will be used when creating a new journal note via the "Simple Note: New Journal Note (Today)" command. If not set, it will fall back to using the `simpleNote.defaultTemplatePath`. If neither is set, a blank journal note is created. Supports the same placeholders.
     *   Default: `""`
 
 ## Known Issues

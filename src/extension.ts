@@ -20,6 +20,7 @@ import { newNoteFromTemplateHandler } from './commands/newNoteFromTemplateHandle
 import { createTemplateHandler } from './commands/createTemplateHandler';
 import { findNoteHandler } from './commands/findNoteHandler';
 import { searchNotesContentHandler } from './commands/searchNotesContentHandler';
+import { newJournalNoteHandler } from './commands/newJournalNoteHandler';
 
 export function activate(context: vscode.ExtensionContext) {
 	// Register the TreeDataProvider for the Note Explorer
@@ -54,7 +55,10 @@ export function activate(context: vscode.ExtensionContext) {
 		),
 		vscode.commands.registerCommand('simple-note-vscode.createTemplate', createTemplateHandler),
 		vscode.commands.registerCommand('simple-note-vscode.findNote', findNoteHandler),
-		vscode.commands.registerCommand('simple-note-vscode.searchNotesContent', searchNotesContentHandler)
+		vscode.commands.registerCommand('simple-note-vscode.searchNotesContent', searchNotesContentHandler),
+		vscode.commands.registerCommand('simple-note-vscode.newJournalNote', 
+			() => newJournalNoteHandler(noteExplorerProvider)
+		)
 	);
 }
 

@@ -14,4 +14,8 @@ export function getDefaultExtension(): string {
 
 export function getDefaultTemplatePath(): string | undefined {
     return vscode.workspace.getConfiguration('simpleNote').get<string>('defaultTemplatePath');
+}
+
+export function getJournalTemplatePath(): string | undefined {
+    return vscode.workspace.getConfiguration('simpleNote').get<string>('journalTemplatePath');
 } 

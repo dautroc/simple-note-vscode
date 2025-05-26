@@ -3,7 +3,7 @@
   "displayName": "Simple Note",
   "description": "Simple note for vscode",
   "publisher": "dautroc",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "icon": "resources/logo.png",
   "repository": {
     "type": "git",
@@ -99,6 +99,12 @@
         "title": "Simple Note: Search Content",
         "category": "Simple Note",
         "icon": "$(search-view-icon)"
+      },
+      {
+        "command": "simple-note-vscode.newJournalNote",
+        "title": "Simple Note: New Journal Note (Today)",
+        "category": "Simple Note",
+        "icon": "$(calendar)"
       }
     ],
     "viewsContainers": {
@@ -142,6 +148,11 @@
           "type": "string",
           "default": "",
           "description": "The absolute path to your default note template. If set, this template will be used when creating a new note without explicitly selecting a template. Leave empty to create a blank new note."
+        },
+        "simpleNote.journalTemplatePath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute path to your journal note template. If set, this template will be used for new journal notes. If not set, it falls back to 'simpleNote.defaultTemplatePath' or a blank note. Supports placeholders."
         }
       }
     },
@@ -181,6 +192,11 @@
           "command": "simple-note-vscode.searchNotesContent",
           "when": "view == simpleNoteExplorer",
           "group": "navigation@7"
+        },
+        {
+          "command": "simple-note-vscode.newJournalNote",
+          "when": "view == simpleNoteExplorer",
+          "group": "navigation@8"
         }
       ],
       "view/item/context": [

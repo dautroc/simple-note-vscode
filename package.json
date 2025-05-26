@@ -4,6 +4,7 @@
   "description": "Simple note for vscode",
   "publisher": "dautroc",
   "version": "0.0.1",
+  "icon": "resources/logo.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/dautroc/simple-note-vscode.git"

@@ -46,7 +46,8 @@
       {
         "command": "simple-note-vscode.refreshNoteExplorer",
         "title": "Simple Note: Refresh Note Explorer",
-        "category": "Simple Note"
+        "category": "Simple Note",
+        "icon": "$(refresh)"
       },
       {
         "command": "simple-note-vscode.newNote",
